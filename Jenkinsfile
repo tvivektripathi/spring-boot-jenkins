@@ -25,12 +25,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                cmd 'mvn -B -DskipTests clean package'
+                bat 'mvn -B -DskipTests clean package'
             }
         }
         stage('Test') {
             steps {
-                cmd 'mvn test'
+                bat 'mvn test'
             }
             post {
                 always {
