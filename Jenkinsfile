@@ -8,8 +8,10 @@ pipeline {
     agent any
 
     parameters{
-        string(name: 'Environment', defaultValue: 'dev')
+        string(name: 'PERSON', defaultValue: 'Vivek Tripathi')
         booleanParam(name: 'RUN_TEST', defaultValue: true)
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'test', 'staging', 'production'])
+        password(name: 'PASSWORD', defaultValue: 'SECRET')
     }
 
     stages {
@@ -17,13 +19,11 @@ pipeline {
             parallel{
                 stage('lint') {
                     steps{
-                        bat "timeout 10"
                         echo "linting stage"
                     }
                 }
                 stage('format'){
                     steps{
-                        bat "timeout 30"
                         echo "formatting stage"
                     }
                 }
@@ -47,6 +47,11 @@ pipeline {
                 always {
                     junit 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+        stage('Deploy'){
+            steps{
+                echo "Deploying to ${params.ENVIRONMENT}"
             }
         }
     }
