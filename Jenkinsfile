@@ -9,7 +9,7 @@ pipeline {
 
     parameters{
         string(name: 'Environment', defaultValue: 'dev')
-        booleanParameter(name: 'RUN_TEST', defaultValue: true)
+        booleanParam(name: 'RUN_TEST', defaultValue: true)
     }
 
     stages {
