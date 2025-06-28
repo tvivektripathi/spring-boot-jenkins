@@ -50,6 +50,10 @@ pipeline {
             }
         }
         stage('Deploy'){
+            input {
+                message "Do you want to proceed?"
+                ok "Yes"
+            }
             steps{
                 echo "Deploying to ${params.ENVIRONMENT}"
             }
