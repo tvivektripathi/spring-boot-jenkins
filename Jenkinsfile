@@ -10,15 +10,19 @@ pipeline {
 
     stages {
         stage('lint and format'){
-            stages{
-                stage('lint'){
-                    steps{
-                        echo "linting stage"
+            parallel{
+                stages{
+                    stage('lint'){
+                        steps{
+                            bat "sleep 30"
+                            echo "linting stage"
+                        }
                     }
-                }
-                stage('format'){
-                    steps{
-                        echo "formatting stage"
+                    stage('format'){
+                        steps{
+                            bat "sleep 30"
+                            echo "formatting stage"
+                        }
                     }
                 }
             }
