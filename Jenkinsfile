@@ -7,19 +7,23 @@ pipeline {
     // }
     agent any
 
+    parameters{
+        string(name: 'Environment', defaultValue: 'dev')
+        booleanParameter(name: 'RUN_TEST', defaultValue: true)
+    }
 
     stages {
         stage('lint and format'){
             parallel{
                 stage('lint') {
                     steps{
-                        bat "sleep 30"
+                        bat "timeout 10"
                         echo "linting stage"
                     }
                 }
                 stage('format'){
                     steps{
-                        bat "sleep 30"
+                        bat "timeout 30"
                         echo "formatting stage"
                     }
                 }
@@ -31,6 +35,11 @@ pipeline {
             }
         }
         stage('Test') {
+            when{
+                expression{
+                    params.RUN_TEST == true
+                }
+            }
             steps {
                 bat 'mvn test'
             }
