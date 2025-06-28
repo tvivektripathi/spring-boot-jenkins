@@ -12,10 +12,14 @@ pipeline {
         stage('lint and format'){
             stages{
                 stage('lint'){
-                    echo "linting stage"
+                    steps{
+                        echo "linting stage"
+                    }
                 }
                 stage('format'){
-                    echo "formatting stage"
+                    steps{
+                        echo "formatting stage"
+                    }
                 }
             }
         }
