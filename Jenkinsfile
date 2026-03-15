@@ -27,12 +27,14 @@ pipeline {
             steps {
                 script {
 
-                    def userPassword = input(
+                    def inputData = input(
                         message: "Enter password to continue",
                         parameters: [
                             password(name: 'PIPELINE_PASSWORD', description: 'Enter password')
                         ]
                     )
+
+                    def userPassword = inputData['PIPELINE_PASSWORD']
 
                     def storedPass
 
@@ -40,7 +42,7 @@ pipeline {
                         storedPass = STORED_PASS
                     }
 
-                    if (userPassword == storedPass) {
+                    if (userPassword.trim() == storedPass.trim()) {
                         echo "✅ Password validation successful"
                     } else {
                         error("❌ Invalid password")
@@ -49,7 +51,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Print Selection') {
             steps {
                 echo "Environment Selected: ${params.ENVIRONMENT}"
