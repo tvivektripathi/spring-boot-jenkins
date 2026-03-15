@@ -40,7 +40,7 @@ pipeline {
                         storedPass = STORED_PASS
                     }
 
-                    if (userPassword.trim() == storedPass.trim()) {
+                    if (userPassword == storedPass) {
                         echo "Password validation successful"
                     } else {
                         error("Invalid password")
