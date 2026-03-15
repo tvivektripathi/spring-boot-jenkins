@@ -22,20 +22,30 @@ pipeline {
 
         password(
             name: 'RUN_PASSWORD',
-            defaultValue: '',
+            defaultValue: 'password',
             description: 'Enter password to run pipeline'
         )
     }
 
     stages {
 
-        stage('Validate Password') {
+        stage('Password Verification') {
             steps {
                 script {
-                    def correctPassword = "MySecurePassword"
 
-                    if (params.RUN_PASSWORD != correctPassword) {
-                        error("Invalid password. Pipeline execution stopped.")
+                    def userPassword = input(
+                        message: "Enter password to continue",
+                        parameters: [
+                            password(name: 'PIPELINE_PASSWORD', description: 'Enter password')
+                        ]
+                    )
+
+                    withCredentials([string(credentialsId: 'pipeline-run-password', variable: 'STORED_PASS')]) {
+
+                        if (userPassword != STORED_PASS) {
+                            error("❌ Invalid password. Pipeline stopped.")
+                        }
+
                     }
                 }
             }
