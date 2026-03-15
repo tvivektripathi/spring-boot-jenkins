@@ -1,62 +1,94 @@
 pipeline {
-    // agent {
-    //     docker {
-    //         image 'maven:3.9.0'
-    //         args '-v /root/.m2:/root/.m2'
-    //     }
-    // }
     agent any
 
-    parameters{
-        string(name: 'PERSON', defaultValue: 'Vivek Tripathi')
-        booleanParam(name: 'RUN_TEST', defaultValue: true)
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'test', 'staging', 'production'])
-        password(name: 'PASSWORD', defaultValue: 'SECRET')
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['PR01', 'PR02'],
+            description: 'Select Environment'
+        )
+
+        choice(
+            name: 'SERVICE_TYPE',
+            choices: [
+                'Service user',
+                'Permission',
+                'Submission',
+                'B1 core',
+                'F1 core'
+            ],
+            description: 'Select Service Type'
+        )
+
+        password(
+            name: 'RUN_PASSWORD',
+            defaultValue: '',
+            description: 'Enter password to run pipeline'
+        )
     }
 
     stages {
-        stage('lint and format'){
-            parallel{
-                stage('lint') {
-                    steps{
-                        echo "linting stage"
+
+        stage('Validate Password') {
+            steps {
+                script {
+                    def correctPassword = "MySecurePassword"
+
+                    if (params.RUN_PASSWORD != correctPassword) {
+                        error("Invalid password. Pipeline execution stopped.")
                     }
                 }
-                stage('format'){
-                    steps{
-                        echo "formatting stage"
+            }
+        }
+
+        stage('Print Selection') {
+            steps {
+                echo "Environment Selected: ${params.ENVIRONMENT}"
+                echo "Service Selected: ${params.SERVICE_TYPE}"
+            }
+        }
+
+        stage('Execute Command') {
+            steps {
+                script {
+
+                    def env = params.ENVIRONMENT
+
+                    switch(params.SERVICE_TYPE) {
+
+                        case 'Service user':
+                            sh """
+                            echo "Running Service User command on ${env}"
+                            """
+                            break
+
+                        case 'Permission':
+                            sh """
+                            echo "Running Permission command on ${env}"
+                            """
+                            break
+
+                        case 'Submission':
+                            sh """
+                            echo "Running Submission command on ${env}"
+                            """
+                            break
+
+                        case 'B1 core':
+                            sh """
+                            echo "Running B1 core command on ${env}"
+                            """
+                            break
+
+                        case 'F1 core':
+                            sh """
+                            echo "Running F1 core command on ${env}"
+                            """
+                            break
                     }
                 }
             }
         }
-        stage('Build') {
-            steps {
-                bat 'mvn -B -DskipTests clean package'
-            }
-        }
-        stage('Test') {
-            when{
-                expression{
-                    params.RUN_TEST == true
-                }
-            }
-            steps {
-                bat 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deploy'){
-            input {
-                message "Do you want to proceed?"
-                ok "Yes"
-            }
-            steps{
-                echo "Deploying to ${params.ENVIRONMENT}"
-            }
-        }
+
     }
 }
