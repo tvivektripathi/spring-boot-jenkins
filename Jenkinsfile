@@ -46,6 +46,9 @@ pipeline {
                         storedPass = STORED_PASS
                     }
 
+                    echo userPassword
+                    echo storedPass
+                    
                     if (userPassword != storedPass) {
                         error("❌ Invalid password. Pipeline stopped.")
                     }
