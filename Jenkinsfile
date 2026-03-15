@@ -40,13 +40,16 @@ pipeline {
                         ]
                     )
 
+                    def storedPass
+
                     withCredentials([string(credentialsId: 'pipeline-run-password', variable: 'STORED_PASS')]) {
-
-                        if (userPassword != STORED_PASS) {
-                            error("❌ Invalid password. Pipeline stopped.")
-                        }
-
+                        storedPass = STORED_PASS
                     }
+
+                    if (userPassword != storedPass) {
+                        error("❌ Invalid password. Pipeline stopped.")
+                    }
+
                 }
             }
         }
