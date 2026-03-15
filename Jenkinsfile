@@ -19,12 +19,6 @@ pipeline {
             ],
             description: 'Select Service Type'
         )
-
-        password(
-            name: 'RUN_PASSWORD',
-            defaultValue: 'password',
-            description: 'Enter password to run pipeline'
-        )
     }
 
     stages {
@@ -46,11 +40,14 @@ pipeline {
                         storedPass = STORED_PASS
                     }
 
-                    echo userPassword
-                    echo storedPass
-                    
-                    if (userPassword != storedPass) {
-                        error("❌ Invalid password. Pipeline stopped.")
+                    echo "Debug: user password length = ${userPassword.length()}"
+                    echo "Debug: stored password length = ${storedPass.length()}"
+
+
+                    if (userPassword.trim() == storedPass.trim()) {
+                        echo "✅ Password validation successful"
+                    } else {
+                        error("❌ Invalid password")
                     }
 
                 }
