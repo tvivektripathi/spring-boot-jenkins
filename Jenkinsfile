@@ -40,10 +40,6 @@ pipeline {
                         storedPass = STORED_PASS
                     }
 
-                    echo "Debug: user password length = ${userPassword.length()}"
-                    echo "Debug: stored password length = ${storedPass.length()}"
-
-
                     if (userPassword.trim() == storedPass.trim()) {
                         echo "✅ Password validation successful"
                     } else {
