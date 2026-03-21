@@ -11,7 +11,7 @@ pipeline {
         choice(
             name: 'SERVICE_TYPE',
             choices: [
-                'Service user',
+                'Service user test',
                 'Permission',
                 'Submission',
                 'B1 core',
